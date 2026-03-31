@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Library – ViewTube</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="nav-left">
+      <button class="icon-btn" id="menuToggle"><span class="material-icons">menu</span></button>
+      <a href="index.html" class="logo">
+        <svg viewBox="0 0 90 20" class="logo-svg" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0" y="2" width="28" height="16" rx="4" fill="#FF0000"/>
+          <polygon points="11,6 11,14 19,10" fill="white"/>
+          <text x="32" y="16" font-family="Roboto,sans-serif" font-weight="700" font-size="13" fill="var(--text-primary)">ViewTube</text>
+        </svg>
+      </a>
+    </div>
+    <div class="nav-center">
+      <div class="search-bar">
+        <input type="text" placeholder="Search your library" aria-label="Search"/>
+        <button class="search-btn"><span class="material-icons">search</span></button>
+      </div>
+    </div>
+    <div class="nav-right">
+      <div class="avatar">JD</div>
+    </div>
+  </header>
+
+  <!-- SIDEBAR - Library Active -->
+  <aside class="sidebar" id="sidebar">
+    <nav class="sidebar-nav">
+      <a href="index.html" class="nav-item"><span class="material-icons">home</span><span>Home</span></a>
+      <a href="#" class="nav-item"><span class="material-icons">explore</span><span>Explore</span></a>
+      <a href="#" class="nav-item"><span class="material-icons">subscriptions</span><span>Subscriptions</span></a>
+      <div class="sidebar-divider"></div>
+      <a href="library.html" class="nav-item active"><span class="material-icons">video_library</span><span>Library</span></a>
+      <a href="history.html" class="nav-item"><span class="material-icons">history</span><span>History</span></a>
+      <a href="watch-later.html" class="nav-item"><span class="material-icons">watch_later</span><span>Watch Later</span></a>
+      <div class="sidebar-divider"></div>
+      <a href="settings.html" class="nav-item"><span class="material-icons">settings</span><span>Settings</span></a>
+    </nav>
+  </aside>
+
+  <!-- LIBRARY CONTENT -->
+  <main class="main-content">
+    <div class="page-header">
+      <h1>Library</h1>
+      <p>Your saved videos, playlists, and more</p>
+    </div>
+
+    <!-- Watch Later Section -->
+    <div class="section">
+      <h2>Watch Later <span class="section-count" id="watchLaterCount">0</span></h2>
+      <div class="video-grid" id="watchLaterGrid"></div>
+    </div>
+
+    <!-- Playlists Section -->
+    <div class="section">
+      <h2>Playlists</h2>
+      <div class="playlist-grid" id="playlistGrid">
+        <div class="playlist-item add-playlist">
+          <span class="material-icons">add</span>
+          <span>New playlist</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="data.js"></script>
+  <script>
+    // Load saved videos from localStorage
+    function loadLibrary() {
+      const savedVideos = JSON.parse(localStorage.getItem('savedVideos') || '[]');
+      const watchLaterGrid = document.getElementById('watchLaterGrid');
+      const watchLaterCount = document.getElementById('watchLaterCount');
+      
+      watchLaterCount.textContent = savedVideos.length;
+      
+      if (savedVideos.length === 0) {
+        watchLaterGrid.innerHTML = '<p style="padding:40px;color:var(--text-secondary);">No videos in Watch Later. <a href="index.html">Browse videos</a></p>';
+        return;
+      }
+      
+      watchLaterGrid.innerHTML = savedVideos.map(v => `
+        <div class="video-card">
+          <div class="thumbnail-wrap">
+            <img src="${v.thumbnail || 'https://via.placeholder.com/320x180?text=Video'}" class="thumbnail" alt="${v.title}" />
+            <div class="hover-overlay">
+              <span class="material-icons">play_arrow</span>
+            </div>
+          </div>
+          <div class="card-info">
+            <p>${v.title}</p>
+            <p>${v.channel} • Saved ${new Date(v.savedAt).toLocaleDateString()}</p>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Sidebar toggle
+    document.getElementById('menuToggle').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.toggle('collapsed');
+    });
+
+    // Initial load
+    loadLibrary();
+  </script>
+</body>
+</html>
+

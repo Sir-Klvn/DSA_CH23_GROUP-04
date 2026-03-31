@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>History – ViewTube</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="nav-left">
+      <button class="icon-btn" id="menuToggle"><span class="material-icons">menu</span></button>
+      <a href="index.html" class="logo">
+        <svg viewBox="0 0 90 20" class="logo-svg" xmlns="http://www.w3.org/2000/svg">
+          <rect x="0" y="2" width="28" height="16" rx="4" fill="#FF0000"/>
+          <polygon points="11,6 11,14 19,10" fill="white"/>
+          <text x="32" y="16" font-family="Roboto,sans-serif" font-weight="700" font-size="13" fill="var(--text-primary)">ViewTube</text>
+        </svg>
+      </a>
+    </div>
+    <div class="nav-center">
+      <div class="search-bar">
+        <input type="text" placeholder="Search your history" aria-label="Search"/>
+        <button class="search-btn"><span class="material-icons">search</span></button>
+      </div>
+    </div>
+    <div class="nav-right">
+      <div class="avatar">JD</div>
+    </div>
+  </header>
+
+  <!-- SIDEBAR - History Active -->
+  <aside class="sidebar" id="sidebar">
+    <nav class="sidebar-nav">
+      <a href="index.html" class="nav-item"><span class="material-icons">home</span><span>Home</span></a>
+      <a href="#" class="nav-item"><span class="material-icons">explore</span><span>Explore</span></a>
+      <a href="#" class="nav-item"><span class="material-icons">subscriptions</span><span>Subscriptions</span></a>
+      <div class="sidebar-divider"></div>
+      <a href="library.html" class="nav-item"><span class="material-icons">video_library</span><span>Library</span></a>
+      <a href="history.html" class="nav-item active"><span class="material-icons">history</span><span>History</span></a>
+      <a href="watch-later.html" class="nav-item"><span class="material-icons">watch_later</span><span>Watch Later</span></a>
+      <div class="sidebar-divider"></div>
+      <a href="settings.html" class="nav-item"><span class="material-icons">settings</span><span>Settings</span></a>
+    </nav>
+  </aside>
+
+  <!-- HISTORY CONTENT -->
+  <main class="main-content">
+    <div class="page-header">
+      <h1>History</h1>
+      <p>Your recently watched videos</p>
+      <div class="history-controls">
+        <button class="btn-secondary" onclick="clearHistory()">Clear all watch history</button>
+        <label class="toggle-switch">
+          <input type="checkbox" id="pauseHistory">
+          <span class="toggle-slider"></span>
+          <span>Pause history (incognito)</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- History Videos -->
+    <div class="video-grid" id="historyGrid"></div>
+    <p id="noHistory" style="padding:40px;color:var(--text-secondary);text-align:center;display:none;">
+      No history yet. <a href="index.html">Watch something</a>
+    </p>
+  </main>
+
+  <script src="data.js"></script>
+  <script>
+    // Track history
+    let historyVideos = JSON.parse(localStorage.getItem('watchHistory') || '[]');
+
+    function loadHistory() {
+      const historyGrid = document.getElementById('historyGrid');
+      const noHistory = document.getElementById('noHistory');
+      
+      if (historyVideos.length === 0) {
+        noHistory.style.display = 'block';
+        historyGrid.style.display = 'none';
+        return;
+      }
+      
+      historyGrid.style.display = 'grid';
+      noHistory.style.display = 'none';
+      
+      // Show last 20
+      const recent = historyVideos.slice(-20).reverse();
+      
+      historyGrid.innerHTML = recent.map(v => {
+        const timeAgo = new Date(v.watchedAt).toLocaleString();
+        return `
+          <div class="video-card">
+            <div class="thumbnail-wrap">
+              <img src="${v.thumbnail}" class="thumbnail" alt="${v.title}" loading="lazy" />
+              <div class="history-time">${timeAgo}</div>
+              <div class="hover-overlay">
+                <span class="material-icons">play_arrow</span>
+              </div>
+            </div>
+            <div class="card-info">
+              <p>${v.title}</p>
+              <p>${v.channel}</p>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function addToHistory(video) {
+      // Remove old entry
+      historyVideos = historyVideos.filter(h => h.id !== video.id);
+      // Add to front
+      historyVideos.unshift({
+        id: video.id,
+        title: video.title,
+        channel: video.channel,
+        thumbnail: video.thumbnail,
+        watchedAt: new Date().toISOString()
+      });
+      // Keep only last 100
+      historyVideos = historyVideos.slice(0, 100);
+      localStorage.setItem('watchHistory', JSON.stringify(historyVideos));
+      loadHistory();
+    }
+
+    function clearHistory() {
+      if (confirm('Clear all watch history?')) {
+        historyVideos = [];
+        localStorage.removeItem('watchHistory');
+        loadHistory();
+      }
+    }
+
+    // Sidebar toggle
+    document.getElementById('menuToggle').addEventListener('click', () => {
+      document.getElementById('sidebar').classList.toggle('collapsed');
+    });
+
+    // Track current page history
+    window.addToHistory = addToHistory;
+
+    // Initial load
+    loadHistory();
+  </script>
+
+  <style>
+    .history-controls {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin: 16px 0;
+      flex-wrap: wrap;
+    }
+    .history-time {
+      position: absolute;
+      bottom: 8px;
+      left: 8px;
+      background: rgba(0,0,0,0.8);
+      color: white;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+  </style>
+</body>
+</html>
+

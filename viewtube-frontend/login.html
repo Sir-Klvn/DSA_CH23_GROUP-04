@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sign in – ViewTube</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"/>
+</head>
+<body class="auth-page">
+
+  <div class="auth-container">
+    <div class="logo-large">
+      <svg viewBox="0 0 90 20" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="2" width="28" height="16" rx="4" fill="#FF0000"/>
+        <polygon points="11,6 11,14 19,10" fill="white"/>
+        <text x="32" y="16" font-family="Roboto,sans-serif" font-weight="700" font-size="13" fill="#f1f1f1">ViewTube</text>
+      </svg>
+    </div>
+
+    <div class="auth-card">
+      <h1>Sign in</h1>
+      <p>Continue to ViewTube</p>
+
+      <!-- Google Sign In (mock) -->
+      <button class="auth-btn google">
+        <svg class="google-icon" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <!-- Full Google SVG path truncated for brevity -->
+        </svg>
+        Sign in with Google
+      </button>
+
+      <div class="divider">or</div>
+
+      <!-- Email Form -->
+      <form id="loginForm">
+        <div class="form-group">
+          <input type="email" id="loginEmail" placeholder="Email or phone" required>
+        </div>
+        <div class="form-group">
+          <input type="password" id="loginPassword" placeholder="Password" required>
+        </div>
+        <button type="submit" class="auth-btn primary">Next</button>
+      </form>
+
+      <div class="auth-links">
+        <a href="#">Forgot password?</a>
+      </div>
+
+      <div class="auth-footer">
+        <p>New to ViewTube? <a href="register.html" class="link-bold">Create account</a></p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Mock login - localStorage user data
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      
+      // Mock validation
+      if (email && password.length > 5) {
+        const user = {
+          email: email,
+          name: email.split('@')[0],
+          loggedIn: true,
+          token: 'mock-jwt-' + Date.now()
+        };
+        localStorage.setItem('viewtubeUser', JSON.stringify(user));
+        window.location.href = 'index.html';
+      } else {
+        alert('Please enter valid email/password');
+      }
+    });
+
+    // Check if already logged in
+    const user = JSON.parse(localStorage.getItem('viewtubeUser') || '{}');
+    if (user.loggedIn) {
+      window.location.href = 'index.html';
+    }
+  </script>
+
+  <style>
+    .auth-page { background: linear-gradient(135deg, var(--bg-primary) 0%, #181818 100%); min-height: 100vh; }
+    .auth-container { 
+      max-width: 400px; margin: 0 auto; padding: 80px 20px 40px;
+      display: flex; flex-direction: column; align-items: center;
+    }
+    .logo-large svg { width: 120px; height: 34px; }
+    .auth-card {
+      width: 100%; background: var(--bg-secondary); border-radius: var(--radius-lg);
+      padding: 48px 40px; box-shadow: var(--shadow);
+    }
+    .auth-card h1 { font-size: 24px; margin-bottom: 8px; }
+    .auth-card p { color: var(--text-secondary); margin-bottom: 32px; }
+    .auth-btn {
+      width: 100%; padding: 14px; margin-bottom: 16px; border-radius: var(--radius-md);
+      font-size: 14px; font-weight: 500; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 12px;
+    }
+    .auth-btn.primary { background: var(--accent); color: white; }
+    .auth-btn.primary:hover { background: var(--accent-hover); }
+    .google-icon { width: 18px; height: 18px; }
+    .divider { 
+      text-align: center; color: var(--text-secondary); margin: 24px 0;
+      position: relative;
+    }
+    .divider::before {
+      content: ''; position: absolute; top: 50%; left: 0; right: 0; height: 1px; background: var(--border);
+    }
+    .divider::after {
+      content: 'or'; background: var(--bg-secondary); padding: 0 24px; color: var(--text-secondary);
+    }
+    .form-group { margin-bottom: 20px; }
+    .form-group input {
+      width: 100%; padding: 14px 16px; border: 1px solid var(--border); border-radius: var(--radius-md);
+      background: var(--bg-primary); color: var(--text-primary); font-size: 16px;
+    }
+    .form-group input:focus { outline: none; border-color: var(--accent); }
+    .auth-links { text-align: center; margin: 24px 0; }
+    .auth-links a { color: var(--accent); font-size: 14px; }
+    .auth-footer { text-align: center; padding-top: 24px; border-top: 1px solid var(--border); }
+    .auth-footer a.link-bold { font-weight: 500; }
+  </style>
+</body>
+</html>
+
