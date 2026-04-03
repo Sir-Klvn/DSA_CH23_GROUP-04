@@ -2,7 +2,7 @@
 //  ViewTube – watch.js  (Watch / Player Page)
 // ============================================================
 
-const API_BASE = 'http://localhost:3000';
+const API_BASE = 'http://localhost:3001';
 
 document.addEventListener('DOMContentLoaded', () => {
   // ── Get video id from URL ────────────────────────────────
@@ -115,28 +115,40 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Fallback HTML5 video
-    const videoUrl = video.videoUrl || 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4';
+    // Fallback HTML5 video (Fixed URL)
+    const videoUrl = video.videoUrl.startsWith('http') ? video.videoUrl : `${API_BASE}${video.videoUrl}`;
     const playerElement = document.createElement('video');
     playerElement.id = 'videoElement';
     playerElement.controls = true;
-    playerElement.autoplay = true;
-    playerElement.muted = true;
+    playerElement.autoplay = false;
+    playerElement.muted = false;
     playerElement.loop = false;
-    playerElement.width = '100%';
-    playerElement.height = '100%';
+    playerElement.playsInline = true;
+    playerElement.preload = 'metadata';
+    playerElement.src = videoUrl;
+    playerElement.poster = video.thumbnail || '';
     playerElement.style.width = '100%';
     playerElement.style.height = '100%';
     playerElement.style.objectFit = 'contain';
-    playerElement.src = videoUrl;
-    playerElement.poster = video.thumbnail || '';
-    playerElement.alt = video.title;
-    playerElement.setAttribute('playsinline', '');
-    playerElement.setAttribute('preload', 'metadata');
-    playerElement.addEventListener('loadstart', () => console.log('Video loading:', video.title));
+    playerElement.style.display = 'block';
+    playerElement.style.backgroundColor = '#000';
+    playerElement.style.position = 'relative';
+    playerElement.style.zIndex = '10';
+    console.log('Setting video src:', videoUrl);
+    console.log('Full URL:', videoUrl);
+    playerElement.addEventListener('loadstart', () => console.log('Video loading:', video.title, videoUrl));
     playerElement.addEventListener('error', (e) => {
-      console.error('Video load error:', e);
+      console.error('Video load error:', videoUrl, e);
+      console.error('Error details:', e.target.error);
+      alert(`Video failed to load: ${e.target.error?.message || 'Unknown error'}`);
     });
+    playerElement.addEventListener('loadeddata', () => console.log('Video ready:', video.title));
+    playerElement.addEventListener('canplay', () => console.log('Video can play'));
+    videoPlayerContainer.innerHTML = '';
+    videoPlayerContainer.style.backgroundColor = '#000';
+    videoPlayerContainer.style.display = 'flex';
+    videoPlayerContainer.style.alignItems = 'center';
+    videoPlayerContainer.style.justifyContent = 'center';
     videoPlayerContainer.appendChild(playerElement);
 
 
@@ -390,29 +402,110 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     loadRecommended();
 
-    // ── Fake player controls ─────────────────────────────────
-    let playing = false;
-    let muted   = false;
-    let progress = 35;
-
-    playPauseBtn.addEventListener('click', () => {
-      playing = !playing;
-      playPauseBtn.querySelector('.material-icons').textContent = playing ? 'pause' : 'play_arrow';
-      if (playing) animateProgress();
-    });
-
-    function animateProgress() {
-      if (!playing) return;
-      progress = Math.min(progress + 0.1, 100);
-      progressFill.style.width = progress + '%';
-      if (progress < 100) requestAnimationFrame(animateProgress);
-      else { playing = false; playPauseBtn.querySelector('.material-icons').textContent = 'play_arrow'; }
+    // ── Real Player Controls (Fixed) ─────────────────────────────────
+    const videoElement = document.getElementById('videoElement');
+    if (!videoElement) {
+      console.error('No videoElement found');
+      return;
     }
 
-    muteBtn.addEventListener('click', () => {
-      muted = !muted;
-      muteBtn.querySelector('.material-icons').textContent = muted ? 'volume_off' : 'volume_up';
+    let isPlaying = false;
+    let isMuted = true;
+
+    // Helper to format time
+    const formatTime = (seconds) => {
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
+
+    // Update time display
+    const updateTimeDisplay = () => {
+      const timeDisplay = document.querySelector('.time-display');
+      if (timeDisplay && videoElement.duration) {
+        timeDisplay.textContent = `${formatTime(videoElement.currentTime)} / ${formatTime(videoElement.duration)}`;
+      }
+    };
+
+    // 1. Play/Pause sync
+    const togglePlayPause = () => {
+      if (videoElement.paused) {
+        videoElement.play().catch(e => console.error('Play failed:', e));
+      } else {
+        videoElement.pause();
+      }
+    };
+
+    playPauseBtn.addEventListener('click', togglePlayPause);
+
+    videoElement.addEventListener('play', () => {
+      isPlaying = true;
+      playPauseBtn.querySelector('.material-icons').textContent = 'pause';
+      document.body.classList.add('playing'); // Optional CSS for hover
     });
+
+    videoElement.addEventListener('pause', () => {
+      isPlaying = false;
+      playPauseBtn.querySelector('.material-icons').textContent = 'play_arrow';
+    });
+
+    // 2. Mute/Unmute
+    muteBtn.addEventListener('click', () => {
+      videoElement.muted = !videoElement.muted;
+    });
+
+    videoElement.addEventListener('volumechange', () => {
+      isMuted = videoElement.muted;
+      muteBtn.querySelector('.material-icons').textContent = isMuted ? 'volume_off' : 'volume_up';
+    });
+
+    // 3. Progress sync + seeking
+    videoElement.addEventListener('loadedmetadata', () => {
+      console.log('Video metadata loaded:', videoElement.duration);
+      updateTimeDisplay();
+    });
+
+    videoElement.addEventListener('timeupdate', () => {
+      const progressPercent = (videoElement.currentTime / videoElement.duration) * 100;
+      progressFill.style.width = `${progressPercent}%`;
+      updateTimeDisplay();
+    });
+
+    videoElement.addEventListener('loadeddata', () => {
+      console.log('Video ready to play');
+    });
+
+    // Progress bar click to seek
+    const progressBarWrap = document.querySelector('.progress-bar-wrap');
+    if (progressBarWrap) {
+      progressBarWrap.addEventListener('click', (e) => {
+        const rect = progressBarWrap.getBoundingClientRect();
+        const pos = (e.clientX - rect.left) / rect.width;
+        videoElement.currentTime = pos * videoElement.duration;
+      });
+    }
+
+    // 4. Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      switch(e.code) {
+        case 'Space': e.preventDefault(); togglePlayPause(); break;
+        case 'KeyM': videoElement.muted = !videoElement.muted; break;
+        case 'ArrowLeft': videoElement.currentTime -= 10; break;
+        case 'ArrowRight': videoElement.currentTime += 10; break;
+        case 'ArrowUp': videoElement.volume = Math.min(1, videoElement.volume + 0.1); break;
+        case 'ArrowDown': videoElement.volume = Math.max(0, videoElement.volume - 0.1); break;
+      }
+    });
+
+    // Ensure video fills container properly
+    videoElement.style.position = 'absolute';
+    videoElement.style.top = '0';
+    videoElement.style.left = '0';
+    videoElement.style.width = '100%';
+    videoElement.style.height = '100%';
+    videoElement.style.zIndex = '1';
+    videoElement.controls = false; // Hide native controls, use custom
 
     // ── Sidebar toggle ───────────────────────────────────────
     menuToggle.addEventListener('click', () => {
@@ -461,8 +554,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const apiVideo = data.data || data;
         if (apiVideo.title && apiVideo.description) {
           // Merge API data if richer
-          video = { ...video, ...apiVideo };
-          console.log('Merged API video:', video.title);
+    video = { ...video, ...apiVideo };
+          if (apiVideo.youtubeId) {
+            video.videoUrl = `https://www.youtube.com/embed/${apiVideo.youtubeId}`;
+          } else if (apiVideo.videoUrl) {
+            video.videoUrl = apiVideo.videoUrl;
+          }
+          console.log('Merged API video:', video.title, 'URL:', video.videoUrl);
         }
       }
     } catch (err) {

@@ -145,7 +145,7 @@ class TrendingService {
     db.getAllVideos().forEach(v => {
       const score = computeTrendingScore(v);
       this.scores[v.id] = score;
-      this.heap.insert({ id: v.id, title: v.title, score, thumbnail: v.thumbnail, channel: v.channel, views: v.views });
+      this.heap.insert({ id: v.id, title: v.title, score, thumbnail: v.thumbnail, channel: v.channel, views: v.views, videoUrl: v.videoUrl });
     });
     this._lastUpdate = Date.now();
   }
@@ -172,7 +172,7 @@ class TrendingService {
     db.getAllVideos().forEach(v => {
       const score = computeTrendingScore(v);
       this.scores[v.id] = score;
-      this.heap.insert({ id: v.id, title: v.title, score, thumbnail: v.thumbnail, channel: v.channel, views: v.views });
+      this.heap.insert({ id: v.id, title: v.title, score, thumbnail: v.thumbnail, channel: v.channel, views: v.views, videoUrl: v.videoUrl });
     });
     this._lastUpdate = Date.now();
   }

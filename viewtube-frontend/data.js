@@ -22,9 +22,8 @@ const videos = [
     subs: "620K",
     description: "In this comprehensive tutorial, we build a complete full-stack application from scratch using React on the frontend and Node.js/Express on the backend. We cover authentication, database integration with PostgreSQL, and deployment to AWS.\n\nTimestamps:\n0:00 – Introduction\n5:30 – Project setup\n12:00 – Backend API\n25:00 – Frontend React\n38:00 – Deployment\n\nCode on GitHub: github.com/codewithme",
     icon: "💻",
-    thumbnail: "https://i.ytimg.com/vi/-tJYnEo5XwE/mqdefault.jpg",
-    youtubeId: "-tJYnEo5XwE",
-    videoUrl: "https://www.youtube.com/embed/-tJYnEo5XwE?autoplay=1&mute=1&rel=0",
+    thumbnail: window.THUMBNAILS.coding[Math.floor(Math.random() * window.THUMBNAILS.coding.length)],
+    videoUrl: "/stream/v1_720p.mp4",
     comments: [
       { author: "DevJane", text: "This is exactly what I needed! The deployment section saved me hours.", likes: 234, time: "2 days ago" },
       { author: "TechMike", text: "Great tutorial! One question – can we use MongoDB instead of PostgreSQL?", likes: 87, time: "1 day ago" },
@@ -47,8 +46,7 @@ const videos = [
     description: "Discover 10 powerful JavaScript tricks that will level up your code. From optional chaining to nullish coalescing and beyond!\n\nFollow us on Twitter: @TechWorld",
     icon: "💻",
     thumbnail: "https://i.ytimg.com/vi/eIrMbAcyC2g/mqdefault.jpg",
-    youtubeId: "eIrMbAcyC2g",
-    videoUrl: "https://www.youtube.com/embed/eIrMbAcyC2g?autoplay=1&mute=1&rel=0",
+    videoUrl: "/stream/v2_720p.mp4",
     comments: [
       { author: "JSNinja", text: "The optional chaining one blew my mind 🤯", likes: 512, time: "5 days ago" },
       { author: "WebDev42", text: "Number 7 is something I use every day now, thanks!", likes: 204, time: "3 days ago" },
@@ -71,8 +69,7 @@ const videos = [
     description: "24/7 Lo-fi hip hop radio – the best beats to study, relax, and focus. Turn it up and get in the zone!",
     icon: "🎵",
     thumbnail: "https://i.ytimg.com/vi/jfKfPfyJRdk/mqdefault.jpg",
-    youtubeId: "jfKfPfyJRdk",
-    videoUrl: "https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&mute=1&rel=0&loop=1",
+    videoUrl: "/stream/v3_720p.mp4",
     comments: [
       { author: "StudyQueen", text: "Listening to this while writing my thesis 💪", likes: 1200, time: "just now" },
       { author: "NightOwl88", text: "Couldn't sleep, this always helps. Thank you!", likes: 876, time: "1 hour ago" },
@@ -94,7 +91,7 @@ const videos = [
     description: "Journey through the most breathtaking landscapes on our planet – from the Himalayas to the Amazon rainforest. Filmed in stunning 4K resolution.",
     icon: "🌿",
     thumbnail: "https://i.ytimg.com/vi/VB1s_uMWXno/mqdefault.jpg",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
+    videoUrl: "/stream/v4_720p.mp4",
     comments: [
       { author: "WanderlustSam", text: "This makes me want to quit my job and travel the world 😭", likes: 2100, time: "4 months ago" },
     ]
@@ -115,7 +112,7 @@ const videos = [
     description: "We rank every single boss in Dark Souls III from worst to best, considering design, difficulty, lore, and fun factor. Do you agree with our list?",
     icon: "🎮",
     thumbnail: "https://i.ytimg.com/vi/UBj24cc9NwE/mqdefault.jpg",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4",
+    videoUrl: "/stream/v5_720p.mp4",
     comments: [
       { author: "SoulsVet", text: "Nameless King at #1? A man of culture I see.", likes: 4500, time: "10 days ago" },
       { author: "CasualGamer", text: "I don't care what anyone says, Yhorm was fun!", likes: 312, time: "1 week ago" },
@@ -137,7 +134,7 @@ const videos = [
     description: "Black holes are one of the most fascinating objects in the universe. In this video, we break down exactly how they form, what happens at the event horizon, and what Stephen Hawking discovered about them.",
     icon: "🔬",
     thumbnail: "https://i.ytimg.com/vi/zKy91o-1D4U/mqdefault.jpg",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerJoyrides.mp4",
+    videoUrl: "/stream/v6_720p.mp4",
     comments: [
       { author: "AstroEnthusiast", text: "The Hawking radiation explanation was so clear. Amazing!", likes: 1800, time: "3 weeks ago" },
     ]
@@ -158,7 +155,7 @@ const videos = [
     description: "We break down Gordon Ramsay's legendary scrambled egg technique step by step. The secret? Low heat, constant movement, and knowing when to stop.",
     icon: "🍳",
     thumbnail: "https://i.ytimg.com/vi/8uY5pCNujt8/mqdefault.jpg",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerMeltdowns.mp4",
+    videoUrl: "/stream/v7_720p.mp4",
     comments: [
       { author: "HomeChef", text: "Made these this morning. Life. Changed. Forever.", likes: 6700, time: "1 year ago" },
       { author: "EggLover42", text: "Still coming back to watch this every Sunday morning 😄", likes: 3200, time: "6 months ago" },
@@ -180,7 +177,7 @@ const videos = [
     description: "The top 10 most spectacular goals from the 2024 Champions League season. From long-range screamers to stunning solo efforts – this is pure football magic.",
     icon: "⚽",
     thumbnail: "https://i.ytimg.com/vi/dQw4w9WgXcQ/mqdefault.jpg",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+    videoUrl: "/stream/v8_720p.mp4",
     comments: [
       { author: "FootballFan99", text: "Goal number 3 had me out of my seat! What a strike!", likes: 8900, time: "2 weeks ago" },
     ]
@@ -201,7 +198,7 @@ const videos = [
     description: "Python has been the #1 language for years – but in 2024, is it still the best choice for beginners and professionals? We break down the pros, cons, and alternatives.",
     icon: "💻",
     thumbnail: "https://i.ytimg.com/vi/_uQrJ0TkZlc/mqdefault.jpg",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/SubaruOutbackOnStreetAndDirt.mp4",
+    videoUrl: "/stream/v9_720p.mp4",
     comments: [
       { author: "PythonDev", text: "Python is here to stay. AI/ML alone guarantees it.", likes: 2100, time: "3 days ago" },
     ]
@@ -222,7 +219,7 @@ const videos = [
     description: "Your complete guide to Tokyo in 2024! We cover the best neighborhoods, must-eat foods, hidden gems, and how to navigate the city like a local. Perfect for first-time visitors.",
     icon: "✈️",
     thumbnail: "https://i.ytimg.com/vi/1Nrg1MH4L_g/mqdefault.jpg",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+    videoUrl: "/stream/v10_720p.mp4",
     comments: [
       { author: "TokyoLover", text: "This guide is spot on! Used it for my trip last month.", likes: 3400, time: "2 months ago" },
     ]
@@ -243,7 +240,7 @@ const videos = [
     description: "We dive deep into the lore of Elden Ring, including all the Shadow of the Erdtree DLC content. From the Greater Will to the Crucible – everything is connected.",
     icon: "🎮",
     thumbnail: "https://i.ytimg.com/vi/GiM5fjuI0LA/mqdefault.jpg",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/VolkswagenGTIReview.mp4",
+videoUrl: "/stream/v1_720p.mp4",
     comments: [
       { author: "LoreMaster", text: "This is the definitive Elden Ring lore video. Bookmarked!", likes: 5600, time: "3 weeks ago" },
     ]
@@ -264,7 +261,7 @@ const videos = [
     description: "World leaders have reached a landmark climate agreement at the UN summit. We break down what this means for the planet and what happens next.",
     icon: "📰",
     thumbnail: "https://i.ytimg.com/vi/abc123/mqdefault.jpg",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4",
+videoUrl: "/stream/v2_720p.mp4",
     comments: [
       { author: "ClimateActivist", text: "Finally some good news! Let's hope they follow through.", likes: 1200, time: "18 hours ago" },
     ]
@@ -285,7 +282,7 @@ const videos = [
     description: "CSS Grid is the most powerful layout system in CSS. In this video, we cover everything you need to know to start using it in your projects.",
     icon: "💻",
     thumbnail: "https://i.ytimg.com/vi/X33V9Nl_7GQ/mqdefault.jpg",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4",
+    videoUrl: "/stream/v13_720p.mp4",
     comments: [
       { author: "CSSWizard", text: "Grid changed my life. This tutorial is perfect for beginners.", likes: 890, time: "5 days ago" },
     ]
@@ -306,7 +303,7 @@ const videos = [
     description: "We explore the most extreme stars in the universe – neutron stars, pulsars, magnetars, and more. These objects defy our understanding of physics.",
     icon: "🔬",
     thumbnail: "https://i.ytimg.com/vi/5E2YIfWVk4E/mqdefault.jpg",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+    videoUrl: "/stream/v14_720p.mp4",
     comments: [
       { author: "SpaceFan", text: "Magnetars are terrifying. Great explanation!", likes: 2100, time: "1 month ago" },
     ]
@@ -327,7 +324,7 @@ const videos = [
     description: "We hunt down the most authentic street food in Bangkok. From pad thai to mango sticky rice – these are the spots the locals love.",
     icon: "✈️",
     thumbnail: "https://i.ytimg.com/vi/4h8p6qM2iY0/mqdefault.jpg",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+    videoUrl: "/stream/v15_720p.mp4",
     comments: [
       { author: "FoodieTraveler", text: "That pad thai place looks amazing! Adding to my list.", likes: 1500, time: "3 months ago" },
     ]
@@ -348,7 +345,7 @@ const videos = [
     description: "Complete guide to React 18's concurrent features, automatic batching, and the new Suspense improvements.",
     icon: "💻",
     thumbnail: "https://i.ytimg.com/vi/wD4eKoaMnUc/mqdefault.jpg",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+    videoUrl: "/stream/v16_720p.mp4",
     comments: [
       { author: "ReactDev", text: "Finally a clear explanation of concurrent features!", likes: 890, time: "1 week ago" },
     ]
@@ -369,7 +366,7 @@ const videos = [
     description: "Maximize your graphics settings while maintaining smooth 60+ FPS gameplay in Cyberpunk 2077.",
     icon: "🎮",
     thumbnail: "https://i.ytimg.com/vi/TqL4-M3Djm8/mqdefault.jpg",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+videoUrl: "/stream/v7_720p.mp4",
     comments: [
       { author: "CyberpunkFan", text: "Finally got 60 FPS with these settings! Thanks!", likes: 2300, time: "5 days ago" },
     ]
@@ -390,7 +387,7 @@ const videos = [
     description: "Smooth jazz piano covers of popular songs for your evening relaxation.",
     icon: "🎵",
     thumbnail: "https://i.ytimg.com/vi/7muskQ6nDUY/mqdefault.jpg",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+    videoUrl: "/stream/v18_720p.mp4",
     comments: [
       { author: "JazzLover", text: "Perfect background music for studying!", likes: 4200, time: "1 month ago" },
     ]
@@ -411,7 +408,7 @@ const videos = [
     description: "Capturing the magic of the northern lights in Iceland with professional photography techniques.",
     icon: "✈️",
     thumbnail: "https://i.ytimg.com/vi/2ZKPmydS6c8/mqdefault.jpg",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+    videoUrl: "/stream/v19_720p.mp4",
     comments: [
       { author: "AuroraHunter", text: "Incredible shots! Planning my trip now.", likes: 1800, time: "2 months ago" },
     ]
@@ -432,7 +429,7 @@ const videos = [
     description: "Understanding the fundamentals of neural networks and how they power modern AI.",
     icon: "💻",
     thumbnail: "https://i.ytimg.com/vi/aircAruvnKk/mqdefault.jpg",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+    videoUrl: "/stream/v20_720p.mp4",
     comments: [
       { author: "AILearner", text: "Finally understand neural networks! Great explanation.", likes: 1200, time: "4 days ago" },
     ]
@@ -453,7 +450,7 @@ const videos = [
     description: "How science transforms cooking into art through molecular gastronomy techniques.",
     icon: "🍳",
     thumbnail: "https://i.ytimg.com/vi/R5KGYXLv6F8/mqdefault.jpg",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+videoUrl: "/stream/v1_720p.mp4",
     comments: [
       { author: "ScienceChef", text: "Molecular gastronomy is fascinating! More please.", likes: 3100, time: "3 months ago" },
     ]
@@ -474,7 +471,7 @@ const videos = [
     description: "The most incredible goals from the 2023-24 Premier League season.",
     icon: "⚽",
     thumbnail: "https://i.ytimg.com/vi/5s9-vEjSvs8/mqdefault.jpg",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+videoUrl: "/stream/v2_720p.mp4",
     comments: [
       { author: "FootballFan", text: "That Salah goal was insane! 🔥", likes: 5800, time: "1 day ago" },
     ]
@@ -495,7 +492,7 @@ const videos = [
     description: "Latest developments in SpaceX's Starship and humanity's journey to Mars.",
     icon: "🔬",
     thumbnail: "https://i.ytimg.com/vi/3px_5z_1Jd4/mqdefault.jpg",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+videoUrl: "/stream/v3_720p.mp4",
     comments: [
       { author: "SpaceEnthusiast", text: "Can't wait for Mars missions! 🚀", likes: 4200, time: "3 days ago" },
     ]
@@ -516,7 +513,7 @@ const videos = [
     description: "Master advanced TypeScript features, patterns, and best practices.",
     icon: "💻",
     thumbnail: "https://i.ytimg.com/vi/vAk6HUiFm7c/mqdefault.jpg",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+videoUrl: "/stream/v4_720p.mp4",
     comments: [
       { author: "TypeScriptDev", text: "These patterns are gold! Thanks for sharing.", likes: 750, time: "5 days ago" },
     ]
@@ -537,7 +534,7 @@ const videos = [
     description: "Official announcement of World Cup 2026 host cities and preparations.",
     icon: "📰",
     thumbnail: "https://i.ytimg.com/vi/dQw4w9WgXcQ/mqdefault.jpg",
-    videoUrl: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+videoUrl: "/stream/v5_720p.mp4",
     comments: [
       { author: "SoccerFan", text: "Excited for World Cup 2026! 🇺🇸🇨🇦🇲🇽", likes: 320, time: "1 day ago" },
     ]

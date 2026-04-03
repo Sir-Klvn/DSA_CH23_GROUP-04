@@ -7,10 +7,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const grid = document.getElementById('videoGrid');
   const menuBtn = document.getElementById('menuToggle');
   const sidebar = document.getElementById('sidebar');
-  const searchInput = document.getElementById('searchInput');
   const searchBtn = document.getElementById('searchBtn');
 
-  const API_BASE = 'http://localhost:3000';
+const API_BASE = 'http://localhost:3001';
 
   // ── Render video grid ──────────────────────────────────
   function renderGrid(videos) {
@@ -95,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return str;
       };
 
-      const videos = list.map(v => ({
+      const videos = (list.length > 0 ? list : window.videosData || []).map(v => ({
         id: normalizeId(v.id || v.videoId || 'unknown'),
         title: v.title || 'No title',
         channel: v.channel || v.channelName || 'Unknown',
@@ -108,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         videoUrl: v.videoUrl || 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4'
       }));
 
-      renderGrid(videos);
+      renderGrid(window.videosData || videos); // Show all 25+ real playing MP4 videos
 
     } catch (error) {
       console.error("ERROR:", error);
