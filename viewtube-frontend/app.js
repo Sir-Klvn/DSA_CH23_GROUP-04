@@ -1,208 +1,81 @@
 // ============================================================
-//  ViewTube – app.js  (Home Page)
+ //  ViewTube – Clean App.js (Home Grid) 
+//  Minimal code: Local data + thumbs + grid render
 // ============================================================
 
 document.addEventListener('DOMContentLoaded', () => {
-
   const grid = document.getElementById('videoGrid');
-  const menuBtn = document.getElementById('menuToggle');
   const sidebar = document.getElementById('sidebar');
-  const searchBtn = document.getElementById('searchBtn');
+  const menuToggle = document.getElementById('menuToggle');
+  const refreshBtn = document.getElementById('refreshBtn');
 
-const API_BASE = 'http://localhost:3001';
+  // Sidebar toggle
+  menuToggle?.addEventListener('click', () => sidebar.classList.toggle('collapsed'));
 
-  // ── Render video grid ──────────────────────────────────
-  function renderGrid(videos) {
+  // Thumbs pool
+const getThumb = (videoId, category = 'coding') => {
+    if (!window.THUMBNAILS) return 'https://via.placeholder.com/320x180/333/fff?text=Video';
+    return window.THUMBNAILS[videoId] || (window.THUMBNAILS[category] ? window.THUMBNAILS[category][Math.floor(Math.random() * window.THUMBNAILS[category].length)] : 'https://via.placeholder.com/320x180/333/fff?text=Video');
+  };
+
+  // Render grid
+  const renderGrid = (videos) => {
     grid.innerHTML = '';
-
-    if (!videos || videos.length === 0) {
-      grid.innerHTML = `<p style="padding:20px;">No videos found</p>`;
+    if (!videos?.length) {
+      grid.innerHTML = '<p style="padding:20px;color:var(--text-secondary);">Loading videos...</p>';
       return;
     }
 
     videos.forEach(v => {
       const card = document.createElement('div');
       card.className = 'video-card';
-
-      const validThumbnail = typeof v.thumbnail === 'string' && /^(https?:\/\/|\/|data:image\/)\S+/.test(v.thumbnail);
-      const thumbnailUrl = validThumbnail ? v.thumbnail : 'https://via.placeholder.com/320x180?text=Video';
-      const thumbnailAlt = v.title ? `${v.title} thumbnail` : 'Video thumbnail';
+      card.onclick = () => location.href = `watch.html?id=${v.id}`;
+      card.style.cursor = 'pointer';
 
       card.innerHTML = `
-      <div class="thumbnail-wrap">
-        <img src="${thumbnailUrl}" class="thumbnail" alt="${thumbnailAlt}" onerror="this.src='https://via.placeholder.com/320x180?text=Video';" />
-        <div class="thumbnail-placeholder" style="display: none;">${v.icon || '🎬'}</div>
-        <div class="hover-overlay">
-          <span class="material-icons">play_arrow</span>
+        <div class="thumbnail-wrap">
+          <img src="${getThumb(v.id, v.category)}" class="thumbnail" alt="${v.title}" onerror="this.style.background='linear-gradient(45deg, #ff6b6b, #4ecdc4); this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjNDljZGM0Ii8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxOCIgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSI+VmlkZW88L3RleHQ+PC9zdmc%3D'; this.style.background='none'" />
+          ${v.isLive ? '<span class="live-badge">LIVE</span>' : `<span class="duration-badge">${v.duration || '0:00'}</span>`}
+          <div class="hover-overlay">
+            <span class="material-icons">play_arrow</span>
+          </div>
         </div>
-      </div>
-      <div class="card-info">
-        <p>${v.title || 'Untitled'}</p>
-        <p>${v.channel || 'Unknown channel'}</p>
-      </div>`;
-
-      card.addEventListener('click', () => {
-        window.location.href = `watch.html?id=${encodeURIComponent(v.id)}`;
-      });
+        <div class="card-info">
+          <p class="video-title">${v.title}</p>
+          <p class="video-channel">${v.channel}</p>
+          <p class="video-meta">${v.views} • ${v.date}</p>
+        </div>`;
       grid.appendChild(card);
     });
-  }
+  };
 
-
-  // ── Load Trending (SAFE VERSION) ───────────────────────
-  async function loadTrending() {
-    try {
-      console.log("Fetching trending videos...");
-
-      const res = await fetch(`${API_BASE}/trending`);
-      if (!res.ok) {
-        throw new Error(`Trending API returned ${res.status}`);
-      }
-
-      const data = await res.json();
-      console.log("API response:", data);
-
-      // Normalize a variety of response shapes
-      let list = [];
-      if (Array.isArray(data)) {
-        list = data;
-      } else if (Array.isArray(data.data)) {
-        list = data.data;
-      } else if (Array.isArray(data.videos)) {
-        list = data.videos;
-      } else if (Array.isArray(data.trending)) {
-        list = data.trending;
-      }
-
-      if (!list.length && window.videosData && Array.isArray(window.videosData)) {
-        console.warn('Falling back to local window.videosData');
-        list = window.videosData;
-      }
-
-      const getThumbnail = raw => {
-        if (typeof raw !== 'string') return 'https://via.placeholder.com/320x180?text=Video';
-        return /^(https?:\/\/|\/|data:image\/)\S+/.test(raw)
-          ? raw
-          : 'https://via.placeholder.com/320x180?text=Video';
-      };
-
-      const normalizeId = raw => {
-        if (raw == null) return 'unknown';
-        const str = String(raw);
-        const numeric = parseInt(str.replace(/\D/g, ''), 10);
-        if (!Number.isNaN(numeric) && numeric > 0) return numeric;
-        return str;
-      };
-
-      const videos = (list.length > 0 ? list : window.videosData || []).map(v => ({
-        id: normalizeId(v.id || v.videoId || 'unknown'),
-        title: v.title || 'No title',
-        channel: v.channel || v.channelName || 'Unknown',
-        views: v.views != null ? v.views : '0 views',
-        thumbnail: getThumbnail(v.thumbnail || v.icon || v.avatar),
-        date: v.date || 'Today',
-        duration: v.duration || '00:00',
-        isLive: !!v.isLive,
-        icon: v.icon || '🎬',
-        videoUrl: v.videoUrl || 'https://sample-videos.com/video123/mp4/720/big_buck_bunny_720p_1mb.mp4'
-      }));
-
-      renderGrid(window.videosData || videos); // Show all 25+ real playing MP4 videos
-
-    } catch (error) {
-      console.error("ERROR:", error);
-      grid.innerHTML = `<p style="color:red;">Failed to load videos</p>`;
-    }
-  }
-
-  // ── Sidebar toggle ─────────────────────────────────────
-  if (menuBtn) {
-    menuBtn.addEventListener('click', () => {
-      if (window.innerWidth <= 768) {
-        sidebar.classList.toggle('mobile-open');
-      } else {
-        sidebar.classList.toggle('collapsed');
-      }
-    });
-  }
-
-  const refreshBtn = document.getElementById('refreshBtn');
-
-  //  Refresh button functionality 
-  if (refreshBtn) {
-    refreshBtn.addEventListener('click', async () => {
-      const iconEl = refreshBtn.querySelector('.material-icons');
-      const textEl = refreshBtn.querySelector('span:last-child');
-      const originalIcon = iconEl ? iconEl.textContent : 'refresh';
-      const originalText = textEl ? textEl.textContent : 'Refresh';
-
-      if (iconEl) {
-        iconEl.textContent = 'refresh';
-        iconEl.style.animation = 'spin 1s linear infinite';
-      }
-      if (textEl) textEl.textContent = 'Refreshing...';
-      refreshBtn.disabled = true;
-
-      try {
-        await loadTrending();
-        if (iconEl) {
-          iconEl.textContent = 'check';
-          iconEl.style.animation = '';
-        }
-        if (textEl) textEl.textContent = 'Updated!';
-      } catch (error) {
-        console.error('Refresh failed:', error);
-        if (iconEl) {
-          iconEl.textContent = 'error';
-          iconEl.style.animation = '';
-        }
-        if (textEl) textEl.textContent = 'Failed';
-      } finally {
-        setTimeout(() => {
-          if (iconEl) iconEl.textContent = originalIcon;
-          if (textEl) textEl.textContent = originalText;
-          refreshBtn.disabled = false;
-        }, 1400);
-      }
-    });
-  }
-
-  //  Real-time trending updates
-  // ── Real-time trending updates (every 5 minutes) ───────
-  let trendingInterval;
-  function startRealTimeUpdates() {
-    // Clear any existing interval
-    if (trendingInterval) clearInterval(trendingInterval);
+  // Load data
+  const loadVideos = async () => {
+    let videos = window.videosData || [];
+    renderGrid(videos);
     
-    // Update every 5 minutes (300000 ms)
-    trendingInterval = setInterval(async () => {
-      try {
-        console.log('Auto-refreshing trending videos...');
-        await loadTrending();
-      } catch (error) {
-        console.error('Auto-refresh failed:', error);
+    // Optional API trending (no error block)
+    try {
+      const res = await fetch('http://localhost:3001/trending');
+      if (res.ok) {
+        const data = await res.json();
+        const trending = Array.isArray(data.data) ? data.data : data;
+        renderGrid(trending);
       }
-    }, 300000);
-  }
+    } catch {}
+  };
 
-  // ── Search (TEMP placeholder) ──────────────────────────
-  function doSearch() {
-    const q = searchInput.value.trim();
-    console.log("Search clicked:", q);
-  }
+  // Refresh btn
+  refreshBtn?.addEventListener('click', () => {
+    refreshBtn.disabled = true;
+    refreshBtn.innerHTML = '<span class="material-icons">refresh</span> Refreshing...';
+    setTimeout(loadVideos, 500);
+    setTimeout(() => {
+      refreshBtn.disabled = false;
+      refreshBtn.innerHTML = '<span class="material-icons">refresh</span> <span>Refresh</span>';
+    }, 1500);
+  });
 
-  if (searchBtn) {
-    searchBtn.addEventListener('click', doSearch);
-  }
-
-  if (searchInput) {
-    searchInput.addEventListener('keydown', e => {
-      if (e.key === 'Enter') doSearch();
-    });
-  }
-
-  // ── INITIAL LOAD ───────────────────────────────────────
-  loadTrending();
-  startRealTimeUpdates();
-
+  // Initial load
+  loadVideos();
 });

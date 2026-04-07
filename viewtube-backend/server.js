@@ -161,7 +161,7 @@ app.get('/', (_req, res) => {
 
 // [All original video, search, trending, recs, users, uploads, system routes unchanged - omitted for brevity in this response but FULLY INCLUDED in actual file]
 
-app.get('/videos', (req, res) => {
+app.get(['/videos', '/videos/v1'], (req, res) => {
   const { sortBy, order, category, limit } = req.query;
   const result = videos.getAll({
     sortBy:   sortBy  || 'trending',
@@ -472,8 +472,8 @@ function startListening(index = 0) {
     console.log(`  ║  ViewTube DSA Backend running        ║`);
     console.log(`  ║  http://localhost:${activePort}               ║`);
     console.log(`  ║  GET / for full API reference        ║`);
-    console.log(`  ║  /videos/v1 now includes videoUrl!   ║`);
-    console.log(`  ║  /stream/v1_720p.mp4 serves videos   ║`);
+    console.log(`  ║  GET /videos or /videos/v1 for videos  ║`);
+    console.log(`  ║  /stream/:videoId_720p.mp4 serves videos  ║`);
     console.log(`  ╚══════════════════════════════════════╝\n`);
   });
 

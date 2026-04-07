@@ -1,7 +1,6 @@
-# ViewTube MP4 Grid Enhancement TODO
+# Thumbnail Dynamic Enhancement TODO
 
-- [x] Create TODO.md with steps
-- [x] Edit viewtube-frontend/data.js: Cycle all 25 videos to existing MP4 files
-- [x] Edit viewtube-frontend/app.js: Force render full window.videosData in grid
-- [ ] Test: Refresh http://localhost:3001 (Ctrl+F5), click cards to play MP4s in watch pages
-- [x] Complete
+✅ Step 1: Expand thumbnail pools in viewtube-frontend/data-thumbs.js (add 5-7 per category)
+✅ Step 2: Remove unused thumbnail fields from viewtube-frontend/data.js
+✅ Step 3: Test feed refresh - verify thumbnails rotate
+✅ Complete
