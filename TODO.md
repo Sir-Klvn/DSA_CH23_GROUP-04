@@ -1,7 +1,18 @@
-# ViewTube MP4 Grid Enhancement TODO
+# Thumbnail Implementation TODO
+Status: 🔄 In Progress (Step 1/9)
 
-- [x] Create TODO.md with steps
-- [x] Edit viewtube-frontend/data.js: Cycle all 25 videos to existing MP4 files
-- [x] Edit viewtube-frontend/app.js: Force render full window.videosData in grid
-- [ ] Test: Refresh http://localhost:3001 (Ctrl+F5), click cards to play MP4s in watch pages
-- [x] Complete
+## Plan Steps:
+- [x] **Step 1**: Create this TODO.md ✅
+  - [x] **Step 1**: Create this TODO.md ✅
+  - [!] **Step 2**: FFmpeg ❌ **NOT** installed. Download: https://www.gyan.dev/ffmpeg/builds/ → Add to PATH
+  - [!] **Step 3**: Backend deps: npm install fluent-ffmpeg (retry after cd fix)
+
+- [ ] **Step 4**: Update `viewtube-backend/package.json` scripts
+- [ ] **Step 5**: Add `/thumbnails` static route in `server.js`
+- [ ] **Step 6**: Implement thumb generation in `upload-service.js`
+- [ ] **Step 7**: Generate thumbs for existing 25 videos
+- [ ] **Step 8**: Update frontend data.js/app.js/watch.js for local thumbs
+- [ ] **Step 9**: Test displays (home/library/watch) + attempt_completion
+
+**Next Action**: Confirm FFmpeg with `ffmpeg -version`
+
